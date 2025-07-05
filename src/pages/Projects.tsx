@@ -1,21 +1,6 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Box, OrbitControls, MeshWobbleMaterial } from '@react-three/drei';
 import { ExternalLink, Github } from 'lucide-react';
-
-const ProjectBox = ({ position }: { position: [number, number, number] }) => {
-  return (
-    <Box args={[1, 1, 1]} position={position}>
-      <MeshWobbleMaterial
-        color="#3b82f6"
-        attach="material"
-        factor={0.6}
-        speed={2}
-      />
-    </Box>
-  );
-};
 
 const Projects: React.FC = () => {
   const projects = [
@@ -68,23 +53,36 @@ const Projects: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* 3D Header Animation */}
+        {/* Animated Header Visual */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="h-64 mb-12"
+          className="h-64 mb-12 flex items-center justify-center"
         >
-          <Canvas camera={{ position: [0, 0, 5] }}>
-            <Suspense fallback={null}>
-              <ambientLight intensity={0.5} />
-              <directionalLight position={[10, 10, 5]} intensity={1} />
-              <ProjectBox position={[-2, 0, 0]} />
-              <ProjectBox position={[0, 0, 0]} />
-              <ProjectBox position={[2, 0, 0]} />
-              <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={2} />
-            </Suspense>
-          </Canvas>
+          <div className="relative flex gap-8">
+            {[0, 1, 2].map((index) => (
+              <motion.div
+                key={index}
+                animate={{
+                  y: [0, -20, 0],
+                  rotateY: [0, 180, 360],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{
+                  duration: 3 + index * 0.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: index * 0.3
+                }}
+                className={`w-20 h-20 rounded-xl bg-gradient-to-br ${
+                  index === 0 ? 'from-primary to-purple' :
+                  index === 1 ? 'from-accent to-cyan' :
+                  'from-purple to-orange'
+                } shadow-2xl hover-glow`}
+              />
+            ))}
+          </div>
         </motion.div>
 
         {/* Projects Grid */}

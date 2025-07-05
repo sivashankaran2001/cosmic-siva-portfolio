@@ -1,22 +1,6 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Sphere, MeshDistortMaterial } from '@react-three/drei';
 import { Link } from 'react-router-dom';
-
-const AnimatedSphere = () => {
-  return (
-    <Sphere visible args={[1, 100, 200]} scale={2}>
-      <MeshDistortMaterial
-        color="#3b82f6"
-        attach="material"
-        distort={0.3}
-        speed={1.5}
-        roughness={0}
-      />
-    </Sphere>
-  );
-};
 
 const Home: React.FC = () => {
   return (
@@ -133,22 +117,91 @@ const Home: React.FC = () => {
           </motion.div>
         </motion.div>
 
-        {/* 3D Animation */}
+        {/* Animated Visual */}
         <motion.div
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="h-96 lg:h-[600px] relative"
+          className="h-96 lg:h-[600px] relative flex items-center justify-center"
         >
-          <Canvas camera={{ position: [0, 0, 5] }}>
-            <Suspense fallback={null}>
-              <ambientLight intensity={0.5} />
-              <directionalLight position={[10, 10, 5]} intensity={1} />
-              <AnimatedSphere />
-              <OrbitControls enableZoom={false} enablePan={false} />
-            </Suspense>
-          </Canvas>
-          <div className="absolute inset-0 bg-gradient-radial from-primary/20 to-transparent animate-pulse-glow pointer-events-none" />
+          {/* Animated Orbs */}
+          <div className="relative w-80 h-80">
+            <motion.div
+              animate={{
+                rotate: 360,
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                scale: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-purple opacity-20 blur-xl"
+            />
+            
+            <motion.div
+              animate={{
+                rotate: -360,
+                scale: [1.1, 1, 1.1],
+              }}
+              transition={{
+                rotate: { duration: 15, repeat: Infinity, ease: "linear" },
+                scale: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className="absolute inset-4 rounded-full bg-gradient-to-r from-accent to-cyan opacity-30 blur-lg"
+            />
+            
+            <motion.div
+              animate={{
+                rotate: 360,
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                rotate: { duration: 25, repeat: Infinity, ease: "linear" },
+                scale: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className="absolute inset-8 rounded-full bg-gradient-to-r from-purple to-orange opacity-40 blur-md"
+            />
+            
+            {/* Central Glow */}
+            <motion.div
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.5, 0.8, 0.5]
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute inset-16 rounded-full bg-gradient-primary opacity-60 blur-sm"
+            />
+            
+            {/* Floating Particles */}
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                animate={{
+                  y: [0, -30, 0],
+                  x: [0, Math.sin(i) * 20, 0],
+                  opacity: [0.3, 0.8, 0.3]
+                }}
+                transition={{
+                  duration: 3 + i * 0.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: i * 0.3
+                }}
+                className="absolute w-2 h-2 bg-primary rounded-full"
+                style={{
+                  top: `${20 + i * 10}%`,
+                  left: `${20 + (i % 3) * 20}%`
+                }}
+              />
+            ))}
+          </div>
+          
+          {/* Background Glow */}
+          <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-purple/5 to-transparent animate-pulse-glow pointer-events-none" />
         </motion.div>
       </div>
     </motion.div>
